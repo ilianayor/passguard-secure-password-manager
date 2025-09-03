@@ -6,7 +6,6 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const { openSidebar } = useMyContext();
 
-  // Match these to Sidebar widths
   const leftPad = openSidebar ? "pl-52" : "pl-12";
 
   return (

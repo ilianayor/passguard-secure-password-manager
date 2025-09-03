@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./components/Auth/Login";
-import Signup from "./components/Auth/Signup";
+import Login from "./components/authentication/Login";
+import Signup from "./components/authentication/Signup";
 import AllPasswords from "./components/passwords/AllPasswords";
 import PasswordDetails from "./components/passwords/PasswordDetails";
 import CreatePassword from "./components/passwords/CreatePassword";
@@ -9,15 +9,15 @@ import UpdatePassword from "./components/passwords/UpdatePassword";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LandingPage from "./components/LandingPage";
-import AccessDenied from "./components/Auth/AccessDenied";
-import Admin from "./components/AuditLogs/Admin";
-import UserProfile from "./components/Auth/UserProfile";
-import ForgotPassword from "./components/Auth/ForgotPassword";
+import AccessDenied from "./components/authentication/AccessDenied";
+import Admin from "./components/auditlog/Admin";
+import UserProfile from "./components/authentication/UserProfile";
+import ForgotPassword from "./components/authentication/ForgotPassword";
 import { Toaster } from "react-hot-toast";
 import NotFound from "./components/NotFound";
 import ContactPage from "./components/contact/ContactPage";
 import AboutPage from "./components/about/AboutPage";
-import ResetPassword from "./components/Auth/ResetPassword";
+import ResetPassword from "./components/authentication/ResetPassword";
 import Footer from "./components/footer/Footer";
 
 const App = () => {

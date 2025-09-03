@@ -1,5 +1,5 @@
 import React from "react";
-import headerImage from "../../device-protected-by-cyber-security.jpg";
+import headerImage from "../../about-page.jpg";
 
 const AboutPage = () => {
   return (
@@ -7,7 +7,6 @@ const AboutPage = () => {
       className="p-8 min-h-screen flex flex-col items-center"
       style={{ fontFamily: "'Lato', sans-serif" }}
     >
-      {/* Header Image */}
       <div className="w-full max-w-3xl mb-12">
         <img
           src={headerImage}
@@ -21,7 +20,6 @@ const AboutPage = () => {
         />
       </div>
 
-      {/* Content container */}
       <div className="w-full max-w-3xl text-left space-y-8 text-gray-800 text-lg">
         <section>
           <h2 className="text-3xl font-semibold mb-3">WHAT IS PASSGUARD?</h2>

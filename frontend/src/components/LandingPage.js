@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import Features from "./LandingPageCom/Features/Features";
+import Features from "./features/Features";
 import mainImage from "../passguard-main.jpg";
 
 const fadeInFromTop = {
@@ -16,9 +16,7 @@ const fadeInFromBottom = {
 const LandingPage = () => {
   return (
     <div className="min-h-[calc(100vh-74px)] bg-white font-[Montserrat]">
-      {/* Hero Section */}
       <div className="lg:w-[80%] w-full mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 py-20 px-6">
-        {/* Left: Text */}
         <motion.div
           className="lg:w-[50%] w-full text-center lg:text-left"
           initial="hidden"

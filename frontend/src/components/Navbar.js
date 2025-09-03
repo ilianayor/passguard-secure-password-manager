@@ -96,7 +96,7 @@ const Navbar = () => {
           ) : (
             <Link to="/login">
               <li className="w-28 text-center bg-purple-600 text-white font-semibold px-6 py-2 rounded-full cursor-pointer hover:bg-purple-700 transition-all duration-200">
-                Log In
+                Log in
               </li>
             </Link>
           )}

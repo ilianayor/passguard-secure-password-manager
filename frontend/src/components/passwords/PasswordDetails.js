@@ -36,7 +36,7 @@ const PasswordDetails = () => {
         foundPassword.parsedContent = JSON.parse(foundPassword.content).content;
         setPassword(foundPassword);
         setEditorContent(foundPassword.parsedContent || "");
-        setUrl(foundPassword.url || ""); // Set URL state
+        setUrl(foundPassword.url || "");
       } else {
         setError("Invalid Password");
       }
@@ -69,7 +69,6 @@ const PasswordDetails = () => {
     }
   }, [id]);
 
-  // Fetch password details and admin role on mount or id change
   useEffect(() => {
     if (id) {
       fetchPasswordDetails();
@@ -77,12 +76,11 @@ const PasswordDetails = () => {
     }
   }, [id, fetchPasswordDetails, checkAdminRole]);
 
-  // Fetch audit logs only if admin
   useEffect(() => {
     if (isAdmin) {
       fetchAuditLogs();
     } else {
-      setAuditLogs([]); // Clear logs if no longer admin
+      setAuditLogs([]); 
     }
   }, [isAdmin, fetchAuditLogs]);
 
@@ -108,13 +106,12 @@ const PasswordDetails = () => {
     if (!editorContent.trim()) {
       return toast.error("Password content shouldn't be empty");
     }
-    // Optional: You may validate URL format here
 
     try {
       setEditLoader(true);
       await api.put(`/passwords/${id}`, {
         content: editorContent,
-        url, // include url in update payload
+        url, 
       });
       toast.success("Password updated successfully");
       setEditEnable(false);

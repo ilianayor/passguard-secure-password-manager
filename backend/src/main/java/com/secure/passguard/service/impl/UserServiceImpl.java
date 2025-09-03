@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GoogleAuthenticatorKey generate2FASecret(Long userId) {
+    public GoogleAuthenticatorKey generateMfaSecret(Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
@@ -163,7 +163,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean validate2FACode(Long userId, int code) {
+    public boolean validateMfaCode(Long userId, int code) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void enable2FA(Long userId) {
+    public void enableMfa(Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 
@@ -180,7 +180,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void disable2FA(Long userId) {
+    public void disableMfa(Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
 

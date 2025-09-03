@@ -26,11 +26,11 @@ public interface UserService {
 
     void resetPassword(String token, String newPassword);
 
-    GoogleAuthenticatorKey generate2FASecret(Long userId);
+    GoogleAuthenticatorKey generateMfaSecret(Long userId);
 
-    boolean validate2FACode(Long userId, int code);
+    boolean validateMfaCode(Long userId, int code);
 
-    void enable2FA(Long userId);
+    void enableMfa(Long userId);
 
-    void disable2FA(Long userId);
+    void disableMfa(Long userId);
 }

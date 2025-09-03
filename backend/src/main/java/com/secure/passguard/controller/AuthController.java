@@ -15,6 +15,7 @@ import com.secure.passguard.security.request.SignupRequest;
 import com.secure.passguard.security.response.LoginResponse;
 import com.secure.passguard.security.response.MessageResponse;
 import com.secure.passguard.security.response.UserDetailsResponse;
+import com.secure.passguard.security.service.LoginAttemptService;
 import com.secure.passguard.security.service.UserDetailsImpl;
 import com.secure.passguard.service.TotpService;
 import com.secure.passguard.service.UserService;
@@ -71,22 +72,38 @@ public class AuthController {
     @Autowired
     TotpService totpService;
 
+    @Autowired
+    LoginAttemptService loginAttemptService;
+
     @PostMapping("/public/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+
+        if (loginAttemptService.isBlocked(username)) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(Map.of(
+                    "Message", "Account temporarily locked due to too many failed attempts. Try again after 15 minutes.",
+                    "Status", false
+                ));
+        }
+
         Authentication authentication;
         try {
             authentication = authenticationManager
                 .authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (AuthenticationException exception) {
+            loginAttemptService.loginFailed(username);
+
             return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of(
                     "Message", "Bad credentials",
                     "Status", false
                 ));
         }
 
+        loginAttemptService.loginSucceeded(username);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
@@ -174,10 +191,10 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Password reset successful!"));
     }
 
-    @PostMapping("/enable-2fa")
-    public ResponseEntity<String> enable2FA() {
+    @PostMapping("/enable-mfa")
+    public ResponseEntity<String> enableMfa() {
         Long userId = authUtil.loggedUserGetId();
-        GoogleAuthenticatorKey secret = userService.generate2FASecret(userId);
+        GoogleAuthenticatorKey secret = userService.generateMfaSecret(userId);
 
         String qrCodeUrl = totpService.getQrCodeUrl(secret,
             userService.getUserById(userId).getUsername());
@@ -185,29 +202,29 @@ public class AuthController {
         return ResponseEntity.ok(qrCodeUrl);
     }
 
-    @PostMapping("/disable-2fa")
-    public ResponseEntity<String> disable2FA() {
+    @PostMapping("/disable-mfa")
+    public ResponseEntity<String> disableMfa() {
         Long userId = authUtil.loggedUserGetId();
-        userService.disable2FA(userId);
+        userService.disableMfa(userId);
 
-        return ResponseEntity.ok("Two-factor authentication disabled");
+        return ResponseEntity.ok("Multi-factor authentication disabled");
     }
 
-    @PostMapping("/verify-2fa")
-    public ResponseEntity<String> verify2FA(@RequestParam int code) {
+    @PostMapping("/verify-mfa")
+    public ResponseEntity<String> verifyMfa(@RequestParam int code) {
         Long userId = authUtil.loggedUserGetId();
-        boolean isValid = userService.validate2FACode(userId, code);
+        boolean isValid = userService.validateMfaCode(userId, code);
 
         if (!isValid) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid two-factor authentication code");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid multi-factor authentication code");
         }
 
-        userService.enable2FA(userId);
-        return ResponseEntity.ok("Two-factor authentication is verified");
+        userService.enableMfa(userId);
+        return ResponseEntity.ok("Multi-factor authentication is verified");
     }
 
-    @GetMapping("/user/2fa-status")
-    public ResponseEntity<?> get2FAStatus() {
+    @GetMapping("/user/mfa-status")
+    public ResponseEntity<?> getMfaStatus() {
         User user = authUtil.loggedInUser();
         if (user != null) {
             return ResponseEntity.ok().body(Map.of("is2faEnabled", user.isTwoFactorEnabled()));
@@ -217,19 +234,19 @@ public class AuthController {
 
     }
 
-    @PostMapping("/public/verify-2fa-login")
-    public ResponseEntity<String> verify2FALogin(@RequestParam int code,
+    @PostMapping("/public/verify-mfa-login")
+    public ResponseEntity<String> verifyMfaLogin(@RequestParam int code,
                                                  @RequestParam String jwtToken) {
         String username = jwtUtils.getUsernameFromJwtToken(jwtToken);
         User user = userService.findByUsername(username);
-        boolean isValid = userService.validate2FACode(user.getUserId(), code);
+        boolean isValid = userService.validateMfaCode(user.getUserId(), code);
 
         if (!isValid) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Invalid two-factor authentication code");
+                .body("Invalid multi-factor authentication code");
         }
 
-        return ResponseEntity.ok("Two-factor authentication verified");
+        return ResponseEntity.ok("Multi-factor authentication verified");
     }
 
 }

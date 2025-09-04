@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
 import PasswordItems from "./PasswordItems";
 import { IoAdd } from "react-icons/io5";
 import { Blocks } from "react-loader-spinner";
 import Errors from "../Errors";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
 
 const AllPasswords = () => {
   const [passwords, setPasswords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [deletingIds, setDeletingIds] = useState(new Set());
+  const [query, setQuery] = useState(""); 
 
   const fetchPasswords = async () => {
     setLoading(true);
@@ -54,6 +55,15 @@ const AllPasswords = () => {
     }
   };
 
+  const filteredPasswords = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return passwords;
+    return passwords.filter((p) => {
+      const hay = `${p.title ?? ""} ${p.url ?? ""} ${p.username ?? ""}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }, [passwords, query]);
+
   if (error) {
     return <Errors message={error} />;
   }
@@ -64,11 +74,20 @@ const AllPasswords = () => {
       style={{ fontFamily: "'Montserrat', sans-serif" }}
     >
       <div className="w-[92%] mx-auto">
-        {!loading && passwords && passwords.length > 0 && (
-          <h1 className="text-slate-900 sm:text-4xl text-2xl font-semibold tracking-tight">
-            My passwords
-          </h1>
-        )}
+
+        <h1 className="text-slate-900 sm:text-4xl text-2xl font-semibold tracking-tight mb-6">
+          Passwords
+        </h1>
+
+        <div className="w-full sm:w-96 mb-8">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Filter by title, URL, or username"
+            className="w-full px-4 py-2 rounded-full border border-slate-300 focus:ring-2 focus:ring-purple-400 focus:outline-none"
+          />
+        </div>
 
         {loading ? (
           <div className="flex flex-col justify-center items-center h-72">
@@ -77,7 +96,7 @@ const AllPasswords = () => {
           </div>
         ) : (
           <>
-            {passwords && passwords.length === 0 ? (
+            {passwords.length === 0 ? (
               <div className="flex flex-col items-center justify-center min-h-96 p-4">
                 <div className="text-center max-w-md">
                   <h2 className="text-2xl font-bold text-slate-900 mb-2">
@@ -96,14 +115,29 @@ const AllPasswords = () => {
                   </div>
                 </div>
               </div>
+            ) : filteredPasswords.length === 0 ? (
+              <div className="flex flex-col items-center justify-center min-h-72 p-6">
+                <h3 className="text-xl font-semibold text-slate-900 mb-2">
+                  No matches found
+                </h3>
+                <p className="text-slate-600">
+                  Try a different search or{" "}
+                  <button
+                    className="underline underline-offset-4"
+                    onClick={() => setQuery("")}
+                  >
+                    clear your filter
+                  </button>.
+                </p>
+              </div>
             ) : (
-              <div className="pt-10 grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-y-10 gap-x-5">
-                {passwords.map((item) => (
+              <div className="pt-4 grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-y-10 gap-x-5">
+                {filteredPasswords.map((item) => (
                   <PasswordItems
                     key={item.id}
                     {...item}
                     id={item.id}
-                    onDelete={() => handleDelete(item.id, item.title)}
+                    onDelete={() => handleDelete(item.id)}
                     deleting={deletingIds.has(item.id)}
                   />
                 ))}

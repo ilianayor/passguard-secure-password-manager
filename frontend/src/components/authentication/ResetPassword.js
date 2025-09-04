@@ -36,7 +36,6 @@ const ResetPassword = () => {
 
     setLoading(true);
     try {
-      // ✅ send as x-www-form-urlencoded because backend uses @RequestParam
       const formData = new URLSearchParams();
       formData.append("token", token);
       formData.append("newPassword", password);
@@ -76,7 +75,6 @@ const ResetPassword = () => {
         </div>
 
         <div className="flex flex-col gap-3 mt-4">
-          {/* New password using shared InputField */}
           <InputField
             label="New password"
             id="password"
@@ -91,7 +89,6 @@ const ResetPassword = () => {
             patternMessage="Password must include letters, numbers and a special character"
           />
 
-          {/* Confirm password with inline validation */}
           <div className="flex flex-col gap-1">
             <label
               htmlFor="confirmPassword"

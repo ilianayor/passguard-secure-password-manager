@@ -167,7 +167,6 @@ const UserProfile = () => {
         </div>
       ) : (
         <div className="max-w-2xl mx-auto px-6 py-8 bg-white rounded-2xl border border-purple-100 space-y-8">
-          {/* User Info */}
           <div className="flex flex-col items-center gap-3">
             <Avatar
               alt={currentUser?.username}
@@ -185,7 +184,6 @@ const UserProfile = () => {
             </p>
           </div>
 
-          {/* Update Credentials */}
           <Accordion
             expanded={openAccount}
             className="rounded-xl border border-purple-100 shadow-none"

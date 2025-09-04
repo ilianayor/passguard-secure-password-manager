@@ -37,7 +37,6 @@ const Signup = () => {
   const onSubmitHandler = async (data) => {
     const { username, email, password, confirmPassword } = data;
 
-    // Confirm password validation
     if (password !== confirmPassword) {
       setError("confirmPassword", { message: "Passwords do not match" });
       return;

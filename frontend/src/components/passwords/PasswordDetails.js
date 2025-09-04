@@ -19,7 +19,7 @@ const PasswordDetails = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [password, setPassword] = useState(null);
   const [editorContent, setEditorContent] = useState("");
-  const [url, setUrl] = useState(""); // Added URL state
+  const [url, setUrl] = useState("");
   const [auditLogs, setAuditLogs] = useState([]);
   const [error, setError] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);

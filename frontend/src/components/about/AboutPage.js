@@ -33,8 +33,8 @@ const AboutPage = () => {
           <ul className="list-disc list-inside space-y-3 px-5">
             <li>Secure registration and login with email confirmation and recovery options.</li>
             <li>Automatically generate strong passwords that meet high-security standards.</li>
-            <li>Store passwords safely using AES encryption, and manage them in your secure vault.</li>
-            <li>Protect accounts with multi-factor authentication (MFA) via email or Google Authenticator.</li>
+            <li>Store passwords safely using AES-GCM encryption, and manage them in your secure vault.</li>
+            <li>Protect accounts with multi-factor authentication (MFA) via Google Authenticator.</li>
             <li>Brute-force protection: accounts are locked after too many failed login attempts.</li>
           </ul>
         </section>

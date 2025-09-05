@@ -22,7 +22,7 @@ Before running the project, make sure you have installed and configured:
 1. **pgAdmin 4** (for PostgreSQL database management)  
 2. **Java 17** or newer version
 3. **Node.js** with **npm**  
-4. **Google Authenticator** mobile app (for MFA/2FA)  
+4. **Google Authenticator** mobile app (for MFA)  
 
 ---
 
@@ -35,8 +35,7 @@ cd passguard-secure-password-manager
 ```
 
 ### Step 2 – Create the database
-Open pgAdmin 4 and create a new PostgreSQL database with the name:
-`passmanager`
+Open pgAdmin 4 and create a new PostgreSQL database.
 
 ### Step 3 – Configure environment variables
 Set the following environment variables in your system (values depend on your setup):
